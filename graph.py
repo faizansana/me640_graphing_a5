@@ -13,7 +13,7 @@ class Vertex:
         self.y_loc = y_loc
 
     def __str__(self):
-        return str(self.id) + ' adjacent: ' + str([x.id for x in self.adjacent])
+        return str(self.id) + f' x_cor: {self.x_loc}, y_cor: {self.y_loc}' + ' adjacent: ' + str([x.id for x in self.adjacent])
 
     def add_neighbor(self, neighbor, weight: int = 0):
         self.adjacent[neighbor] = weight
@@ -63,6 +63,12 @@ class Graph:
 
     def get_vertices(self):
         return self.vert_dict.keys()
+
+    def check_if_vertex_exists(self, vertex: Vertex):
+        if vertex in self.vert_dict.values():
+            return True
+        else:
+            return False
 
 
 if __name__ == '__main__':
