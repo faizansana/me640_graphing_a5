@@ -72,7 +72,7 @@ class Graph:
             raise Exception('Adding edge for vertex that does not exist!')
 
         self.vert_dict[frm].add_neighbor(self.vert_dict[to], cost)
-        # self.vert_dict[to].add_neighbor(self.vert_dict[frm], cost)
+        self.vert_dict[to].add_neighbor(self.vert_dict[frm], cost)
 
     def get_vertices(self):
         return self.vert_dict.values()
@@ -125,7 +125,6 @@ def astar(local_graph: Graph, start_vertex: int, end_vertex: int):
     came_from: Dict[Vertex, Union[Vertex, None]] = {}
     cost_so_far: Dict[Vertex, int] = {}
 
-    came_from[local_graph.get_vertex(start_vertex)] = None
     cost_so_far[local_graph.get_vertex(start_vertex)] = 0
 
     while not open_queue.empty():
