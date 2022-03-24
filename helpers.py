@@ -1,5 +1,6 @@
 import argparse
 import random
+from typing import List
 
 import matplotlib.pyplot as plt
 
@@ -66,17 +67,31 @@ def generate_edges(num_of_edges: int, local_graph: graph.Graph):
                 break
 
 
-def plot_graph(local_graph: graph.Graph):
+def plot_graph(local_graph: graph.Graph, show_plot: bool = True):
 
     # Plot nodes
     for vertex in local_graph.get_vertices():
         x_cor, y_cor = vertex.x_loc, vertex.y_loc
         plt.plot(x_cor, y_cor, 'ro')
+        plt.annotate(f'{vertex.id}', [x_cor, y_cor+1])
 
         # Plot edges
         adj_vertices = vertex.get_connections()
         for adj_vertex in adj_vertices:
             plt.plot([x_cor, adj_vertex.x_loc], [y_cor, adj_vertex.y_loc], 'y')
+
+    if show_plot:
+        plt.axes([0, 100, 0, 100])
+        plt.show()
+
+
+def plot_path(local_graph: graph.Graph, path: List[graph.Vertex]):
+    plot_graph(local_graph, show_plot=False)
+
+    for i in range(len(path) - 1):
+        x1, y1 = path[i].x_loc, path[i].y_loc
+        x2, y2 = path[i+1].x_loc, path[i+1].y_loc
+        plt.plot([x1, x2], [y1, y2], 'g', linewidth=2.5)
 
     plt.axes([0, 100, 0, 100])
     plt.show()
