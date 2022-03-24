@@ -62,7 +62,7 @@ class Graph:
             raise Exception('Adding edge for vertex that does not exist!')
 
         self.vert_dict[frm].add_neighbor(self.vert_dict[to], cost)
-        self.vert_dict[to].add_neighbor(self.vert_dict[frm], cost)
+        # self.vert_dict[to].add_neighbor(self.vert_dict[frm], cost)
 
     def get_vertices(self):
         return self.vert_dict.keys()
@@ -89,6 +89,12 @@ class Graph:
 
         for vertices in vertex.adjacent.keys():
             if second_node == vertices.get_id():
+                return True
+
+        vertex = self.vert_dict[second_node]
+
+        for vertices in vertex.adjacent.keys():
+            if first_node == vertices.get_id():
                 return True
 
         return False
