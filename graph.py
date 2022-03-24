@@ -2,11 +2,21 @@
 Inspired from https://www.bogotobogo.com/python/python_graph_data_structures.php
 """
 from __future__ import annotations
-from typing import Dict, Union
+
+import math
+import queue
+from typing import Dict, List, Tuple, Union
+
+
+def calculate_euclidean_distance(first_vertex: Vertex, second_vertex: Vertex):
+    x1, y1 = first_vertex.x_loc, first_vertex.y_loc
+    x2, y2 = second_vertex.x_loc, second_vertex.y_loc
+    distance = math.dist([x1, y1], [x2, y2])
+    return int(distance)
 
 
 class Vertex:
-    def __init__(self, node: Union[int, str], x_loc: int, y_loc: int):
+    def __init__(self, node: int, x_loc: int, y_loc: int):
         self.id = node
         self.adjacent: Dict[Vertex, int] = {}
         self.x_loc = x_loc
@@ -45,7 +55,7 @@ class Graph:
     def __iter__(self):
         return iter(self.vert_dict.values())
 
-    def add_vertex(self, node: Union[int, str], x_loc: int, y_loc: int):
+    def add_vertex(self, node: int, x_loc: int, y_loc: int):
         self.num_vertices = self.num_vertices + 1
         new_vertex = Vertex(node, x_loc, y_loc)
         self.vert_dict[node] = new_vertex
@@ -100,16 +110,51 @@ class Graph:
         return False
 
 
+def construct_path(came_from: Dict[Vertex, Vertex], current: Vertex) -> List[Vertex]:
+    total_path = [current]
+    while current in came_from:
+        current = came_from[current]
+        total_path.insert(0, current)
+    return total_path
+
+
+def astar(local_graph: Graph, start_vertex: int, end_vertex: int):
+    open_queue: queue.PriorityQueue[Tuple[int, Vertex]] = queue.PriorityQueue()
+    open_queue.put((0, local_graph.get_vertex(start_vertex)))
+
+    came_from: Dict[Vertex, Union[Vertex, None]] = {}
+    cost_so_far: Dict[Vertex, int] = {}
+
+    came_from[local_graph.get_vertex(start_vertex)] = None
+    cost_so_far[local_graph.get_vertex(start_vertex)] = 0
+
+    while not open_queue.empty():
+        current = open_queue.get()[1]
+
+        if current.id == end_vertex:
+            return construct_path(came_from, current)
+
+        for adj_vertex in current.get_connections():
+            new_cost = cost_so_far[current] + current.get_weight(adj_vertex)
+            if adj_vertex not in cost_so_far or new_cost < cost_so_far[adj_vertex]:
+                cost_so_far[adj_vertex] = new_cost
+                priority = new_cost + calculate_euclidean_distance(adj_vertex, local_graph.get_vertex(end_vertex))
+                open_queue.put((priority, adj_vertex))
+                came_from[adj_vertex] = current
+
+    raise Exception('No path found')
+
+
 if __name__ == '__main__':
 
     graph = Graph()
 
-    graph.add_vertex('a', 3, 1)
-    graph.add_vertex('b', 4, 1)
-    graph.add_vertex('c', 5, 6)
-    graph.add_vertex('d', 5, 1)
-    graph.add_vertex('e', 2, 2)
-    graph.add_vertex('f', 4, 5)
+    graph.add_vertex(0, 3, 1)
+    graph.add_vertex(1, 4, 1)
+    graph.add_vertex(2, 5, 6)
+    graph.add_vertex(3, 5, 1)
+    graph.add_vertex(4, 2, 2)
+    graph.add_vertex(5, 4, 5)
 
     graph.add_edge('a', 'b', 7)
     graph.add_edge('a', 'c', 9)

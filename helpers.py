@@ -1,5 +1,4 @@
 import argparse
-import math
 import random
 
 import matplotlib.pyplot as plt
@@ -62,16 +61,9 @@ def generate_edges(num_of_edges: int, local_graph: graph.Graph):
                 continue
             if local_graph.check_if_edge_exists(first_vertex, second_vertex) is False:
                 # Calculate euclidean distance between vertices and add to graph db
-                distance = calculate_euclidean_distance(local_graph.get_vertex(first_vertex), local_graph.get_vertex(second_vertex))
+                distance = graph.calculate_euclidean_distance(local_graph.get_vertex(first_vertex), local_graph.get_vertex(second_vertex))
                 local_graph.add_edge(first_vertex, second_vertex, cost=distance)
                 break
-
-
-def calculate_euclidean_distance(first_vertex: graph.Vertex, second_vertex: graph.Vertex):
-    x1, y1 = first_vertex.x_loc, first_vertex.y_loc
-    x2, y2 = second_vertex.x_loc, second_vertex.y_loc
-    distance = math.dist([x1, y1], [x2, y2])
-    return int(distance)
 
 
 def plot_graph(local_graph: graph.Graph):
@@ -84,7 +76,7 @@ def plot_graph(local_graph: graph.Graph):
         # Plot edges
         adj_vertices = vertex.get_connections()
         for adj_vertex in adj_vertices:
-            plt.plot([x_cor, adj_vertex.x_loc], [y_cor, adj_vertex.y_loc])
+            plt.plot([x_cor, adj_vertex.x_loc], [y_cor, adj_vertex.y_loc], 'y')
 
     plt.axes([0, 100, 0, 100])
     plt.show()
