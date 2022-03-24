@@ -1,4 +1,5 @@
 import argparse
+import math
 import random
 
 import graph
@@ -27,6 +28,7 @@ def generate_vertices(num_of_vertices: int, local_graph: graph.Graph):
 
     Args:
         num_of_vertices (int): Number of vertices
+        local_graph (graph.Graph): Graph object instance
     """
 
     for node in range(num_of_vertices):
@@ -38,3 +40,33 @@ def generate_vertices(num_of_vertices: int, local_graph: graph.Graph):
             if local_graph.check_if_vertex_exists(vertex) is False:
                 local_graph.add_vertex(node, x_loc=x_cor, y_loc=y_cor)
                 break
+
+
+def generate_edges(num_of_edges: int, local_graph: graph.Graph):
+    """Generates specified number of edges
+
+    Args:
+        num_of_edges (int): Number of edges
+        local_graph (graph.Graph): Graph object instance
+    """
+    num_of_vertices = local_graph.get_num_of_vertices()
+
+    for _ in range(num_of_edges):
+        while True:
+            first_vertex = generate_random_number(max=num_of_vertices-1)
+            second_vertex = generate_random_number(max=num_of_vertices-1)
+            # Prevent loops
+            if first_vertex == second_vertex:
+                continue
+            if local_graph.check_if_edge_exists(first_vertex, second_vertex) is False:
+                # Calculate euclidean distance between vertices and add to graph db
+                distance = calculate_euclidean_distance(local_graph.get_vertex(first_vertex), local_graph.get_vertex(second_vertex))
+                local_graph.add_edge(first_vertex, second_vertex, cost=distance)
+                break
+
+
+def calculate_euclidean_distance(first_vertex: graph.Vertex, second_vertex: graph.Vertex):
+    x1, y1 = first_vertex.x_loc, first_vertex.y_loc
+    x2, y2 = second_vertex.x_loc, second_vertex.y_loc
+    distance = math.dist([x1, y1], [x2, y2])
+    return int(distance)

@@ -1,21 +1,21 @@
 """
 Inspired from https://www.bogotobogo.com/python/python_graph_data_structures.php
 """
-
+from __future__ import annotations
 from typing import Dict, Union
 
 
 class Vertex:
     def __init__(self, node: Union[int, str], x_loc: int, y_loc: int):
         self.id = node
-        self.adjacent: Dict[Union[int, str], int] = {}
+        self.adjacent: Dict[Vertex, int] = {}
         self.x_loc = x_loc
         self.y_loc = y_loc
 
     def __str__(self):
         return str(self.id) + f' x_cor: {self.x_loc}, y_cor: {self.y_loc}' + ' adjacent: ' + str([x.id for x in self.adjacent])
 
-    def add_neighbor(self, neighbor, weight: int = 0):
+    def add_neighbor(self, neighbor: Vertex, weight: int = 0):
         self.adjacent[neighbor] = weight
 
     def get_connections(self):
@@ -24,7 +24,7 @@ class Vertex:
     def get_id(self):
         return self.id
 
-    def get_weight(self, neighbor):
+    def get_weight(self, neighbor: Vertex):
         return self.adjacent[neighbor]
 
     def __eq__(self, other) -> bool:
@@ -32,6 +32,9 @@ class Vertex:
             return True
         else:
             return False
+    
+    def __hash__(self) -> int:
+        return hash(self.id)
 
 
 class Graph:
@@ -52,7 +55,7 @@ class Graph:
         if n in self.vert_dict:
             return self.vert_dict[n]
         else:
-            return None
+            raise Exception('Vertex does not exist')
 
     def add_edge(self, frm: Union[int, str], to: Union[int, str], cost: int = 0):
         if frm not in self.vert_dict or to not in self.vert_dict:
@@ -65,10 +68,30 @@ class Graph:
         return self.vert_dict.keys()
 
     def check_if_vertex_exists(self, vertex: Vertex):
+        """Checks if two vertices have the same x and y coordinates
+
+        Args:
+            vertex (Vertex): Instance of vertex class
+
+        Returns:
+            bool: returns True if vertex overlaps another. Else returns False.
+        """
         if vertex in self.vert_dict.values():
             return True
         else:
             return False
+
+    def get_num_of_vertices(self):
+        return len(self.vert_dict)
+
+    def check_if_edge_exists(self, first_node: Union[int, str], second_node: Union[int, str]):
+        vertex = self.vert_dict[first_node]
+
+        for vertices in vertex.adjacent.keys():
+            if second_node == vertices.get_id():
+                return True
+
+        return False
 
 
 if __name__ == '__main__':
