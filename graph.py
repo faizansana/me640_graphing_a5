@@ -32,7 +32,7 @@ class Vertex:
             return True
         else:
             return False
-    
+
     def __hash__(self) -> int:
         return hash(self.id)
 
@@ -65,7 +65,7 @@ class Graph:
         # self.vert_dict[to].add_neighbor(self.vert_dict[frm], cost)
 
     def get_vertices(self):
-        return self.vert_dict.keys()
+        return self.vert_dict.values()
 
     def check_if_vertex_exists(self, vertex: Vertex):
         """Checks if two vertices have the same x and y coordinates

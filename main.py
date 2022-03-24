@@ -16,6 +16,8 @@ def main():
     for edge in local_graph:
         print(f'g.vert_dict[{edge.get_id()}]={local_graph.vert_dict[edge.get_id()]}')
 
+    helpers.plot_graph(local_graph)
+
 
 if __name__ == '__main__':
     main()

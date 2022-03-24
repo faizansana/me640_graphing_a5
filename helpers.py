@@ -2,6 +2,8 @@ import argparse
 import math
 import random
 
+import matplotlib.pyplot as plt
+
 import graph
 
 
@@ -70,3 +72,19 @@ def calculate_euclidean_distance(first_vertex: graph.Vertex, second_vertex: grap
     x2, y2 = second_vertex.x_loc, second_vertex.y_loc
     distance = math.dist([x1, y1], [x2, y2])
     return int(distance)
+
+
+def plot_graph(local_graph: graph.Graph):
+
+    # Plot nodes
+    for vertex in local_graph.get_vertices():
+        x_cor, y_cor = vertex.x_loc, vertex.y_loc
+        plt.plot(x_cor, y_cor, 'ro')
+
+        # Plot edges
+        adj_vertices = vertex.get_connections()
+        for adj_vertex in adj_vertices:
+            plt.plot([x_cor, adj_vertex.x_loc], [y_cor, adj_vertex.y_loc])
+
+    plt.axes([0, 100, 0, 100])
+    plt.show()
