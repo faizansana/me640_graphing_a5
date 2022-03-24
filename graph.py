@@ -27,6 +27,12 @@ class Vertex:
     def get_weight(self, neighbor):
         return self.adjacent[neighbor]
 
+    def __eq__(self, other) -> bool:
+        if self.x_loc == other.x_loc and self.y_loc == other.y_loc or self.id == other.id:
+            return True
+        else:
+            return False
+
 
 class Graph:
     def __init__(self):
