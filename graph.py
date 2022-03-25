@@ -4,8 +4,9 @@ Inspired from https://www.bogotobogo.com/python/python_graph_data_structures.php
 from __future__ import annotations
 
 import math
-import queue
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Union
+
+import datastructure
 
 
 def calculate_euclidean_distance(first_vertex: Vertex, second_vertex: Vertex):
@@ -119,16 +120,16 @@ def construct_path(came_from: Dict[Vertex, Vertex], current: Vertex) -> List[Ver
 
 
 def astar(local_graph: Graph, start_vertex: int, end_vertex: int):
-    open_queue: queue.PriorityQueue[Tuple[int, Vertex]] = queue.PriorityQueue()
-    open_queue.put((0, local_graph.get_vertex(start_vertex)))
+    open_queue = datastructure.PriorityQueue()
+    open_queue.put(local_graph.get_vertex(start_vertex), priority=0)
 
-    came_from: Dict[Vertex, Union[Vertex, None]] = {}
+    came_from: Dict[Vertex, Vertex] = {}
     cost_so_far: Dict[Vertex, int] = {}
 
     cost_so_far[local_graph.get_vertex(start_vertex)] = 0
 
     while not open_queue.empty():
-        current = open_queue.get()[1]
+        current = open_queue.get()
 
         if current.id == end_vertex:
             return construct_path(came_from, current)
@@ -138,7 +139,33 @@ def astar(local_graph: Graph, start_vertex: int, end_vertex: int):
             if adj_vertex not in cost_so_far or new_cost < cost_so_far[adj_vertex]:
                 cost_so_far[adj_vertex] = new_cost
                 priority = new_cost + calculate_euclidean_distance(adj_vertex, local_graph.get_vertex(end_vertex))
-                open_queue.put((priority, adj_vertex))
+                open_queue.put(adj_vertex, priority=priority)
+                came_from[adj_vertex] = current
+
+    raise Exception('No path found')
+
+
+def modified_astar(local_graph: Graph, start_vertex: int, end_vertex: int):
+    open_queue = datastructure.PriorityQueue()
+    open_queue.put(local_graph.get_vertex(start_vertex), priority=0)
+
+    came_from: Dict[Vertex, Vertex] = {}
+    cost_so_far: Dict[Vertex, int] = {}
+
+    cost_so_far[local_graph.get_vertex(start_vertex)] = 0
+
+    while not open_queue.empty():
+        current = open_queue.get()
+
+        if current.id == end_vertex:
+            return construct_path(came_from, current)
+
+        for adj_vertex in current.get_connections():
+            new_cost = cost_so_far[current] + current.get_weight(adj_vertex)
+            if adj_vertex not in cost_so_far or new_cost < cost_so_far[adj_vertex]:
+                cost_so_far[adj_vertex] = new_cost
+                priority = new_cost + 10*calculate_euclidean_distance(adj_vertex, local_graph.get_vertex(end_vertex))
+                open_queue.put(adj_vertex, priority=priority)
                 came_from[adj_vertex] = current
 
     raise Exception('No path found')
