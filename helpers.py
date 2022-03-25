@@ -95,3 +95,13 @@ def plot_path(local_graph: graph.Graph, path: List[graph.Vertex], block: bool = 
 
     plt.axes([0, 100, 0, 100])
     plt.show(block=block)
+
+
+def print_path(path: List[graph.Vertex]):
+
+    last_vertex = path.pop()
+
+    for vertex in path:
+        print(f'{vertex.id} ->', end=' ')
+
+    print(last_vertex.id)
