@@ -85,7 +85,7 @@ def plot_graph(local_graph: graph.Graph, show_plot: bool = True):
         plt.show()
 
 
-def plot_path(local_graph: graph.Graph, path: List[graph.Vertex]):
+def plot_path(local_graph: graph.Graph, path: List[graph.Vertex], block: bool = True):
     plot_graph(local_graph, show_plot=False)
 
     for i in range(len(path) - 1):
@@ -94,4 +94,4 @@ def plot_path(local_graph: graph.Graph, path: List[graph.Vertex]):
         plt.plot([x1, x2], [y1, y2], 'g', linewidth=2.5)
 
     plt.axes([0, 100, 0, 100])
-    plt.show()
+    plt.show(block=block)
