@@ -11,7 +11,9 @@ def main():
     helpers.generate_edges(args.edges, local_graph)
     try:
         path = graph.astar(local_graph, start_vertex=0, end_vertex=args.nodes - 1)
+        path_modified_a_star = graph.modified_astar(local_graph, start_vertex=0, end_vertex=args.nodes - 1)
         helpers.plot_path(local_graph, path)
+        helpers.plot_path(local_graph, path_modified_a_star)
     except Exception as e:
         print('Error:', e, file=sys.stderr)
         helpers.plot_graph(local_graph)
