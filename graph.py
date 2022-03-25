@@ -171,6 +171,32 @@ def modified_astar(local_graph: Graph, start_vertex: int, end_vertex: int):
     raise Exception('No path found')
 
 
+def dijkstra_search(local_graph: Graph, start_vertex: int, end_vertex: int):
+    open_queue = datastructure.PriorityQueue()
+    open_queue.put(local_graph.get_vertex(start_vertex), priority=0)
+
+    came_from: Dict[Vertex, Vertex] = {}
+    cost_so_far: Dict[Vertex, int] = {}
+
+    cost_so_far[local_graph.get_vertex(start_vertex)] = 0
+
+    while not open_queue.empty():
+        current = open_queue.get()
+
+        if current.id == end_vertex:
+            return construct_path(came_from, current)
+
+        for adj_vertex in current.get_connections():
+            new_cost = cost_so_far[current] + current.get_weight(adj_vertex)
+            if adj_vertex not in cost_so_far or new_cost < cost_so_far[adj_vertex]:
+                cost_so_far[adj_vertex] = new_cost
+                priority = new_cost
+                open_queue.put(adj_vertex, priority=priority)
+                came_from[adj_vertex] = current
+
+    raise Exception('No path found')
+
+
 if __name__ == '__main__':
 
     graph = Graph()
