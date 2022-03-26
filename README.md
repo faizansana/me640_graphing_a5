@@ -2,7 +2,7 @@
 
 This code is developed for Section 4 of Assignment 5 for ME640 Winter 2022.
 
-This code creates a random number of nodes *N* and edges based on the specified input and then uses the A* algorithm to calculate the shortest path from node 1 to N.
+This code creates a random number of nodes *N* and edges based on the specified input and then uses the A* algorithm, weighted A* and Dijkstra's algorithm to calculate the shortest path from node 1 to N.
 
 ## Getting Started
 
